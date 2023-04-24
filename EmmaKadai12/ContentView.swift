@@ -14,7 +14,7 @@ struct ContentView: View {
     @AppStorage("TaxRate") var taxRate: Int = 0
 
     var body: some View {
-        VStack(spacing: 10){
+        VStack(spacing: 20){
             Text("課題12\n税込金額を計算するアプリ")
                 .font(.headline)
             Text("消費税率は保存される")
@@ -43,9 +43,13 @@ struct ContentView: View {
                 }
                 GridRow{
                     Button(action: {
-                        // Doubleにできなければ0
-                        let taxExcludedAmountNumber = Double(taxExcludedAmountInput) ?? 0
-                        let taxRateNumber = Double(taxRateInput) ?? 0
+                        // 税抜金額と消費税率をDoubleに変換できなければ計算しない
+                        guard let taxExcludedAmountNumber = Double(taxExcludedAmountInput) else {
+                            return
+                        }
+                        guard let taxRateNumber = Double(taxRateInput) else {
+                            return
+                        }
 
                         //税込金額を計算
                         taxIncludingAmountNumber = taxExcludedAmountNumber * (1 + (taxRateNumber * 0.01))
@@ -62,7 +66,6 @@ struct ContentView: View {
                     }
                     .gridCellColumns(3)
                     .frame(maxWidth:.infinity, alignment: .center)
-
                 }
                 GridRow{
                     Text("税込金額")
@@ -78,7 +81,7 @@ struct ContentView: View {
                     .padding(.vertical, -20)
             )
             
-            //            Text("TaxRate: \(UserDefaults.standard.integer(forKey: "TaxRate"))").padding(.top, 50)
+//                        Text("TaxRate: \(UserDefaults.standard.integer(forKey: "TaxRate"))").padding(.top, 50)
 
             Spacer()
                 .onAppear{
